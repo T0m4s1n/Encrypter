@@ -244,7 +244,7 @@ export default defineComponent({
                     class="file-input"
                 >
                 <div class="file-input-overlay">
-                    <Upload size="24" />
+                    <Upload :size="24" />
                     <span>{{ selectedFile ? selectedFile.name : 'Choose a file' }}</span>
                 </div>
             </div>
@@ -260,7 +260,7 @@ export default defineComponent({
             </button>
         </div>
         <div v-if="errorMessage" class="error-message">
-            <AlertTriangle size="20" />
+            <AlertTriangle :size="20" />
             {{ errorMessage }}
         </div>
         <div class="files-list" v-if="uploadedFiles.length > 0">
@@ -272,7 +272,7 @@ export default defineComponent({
                     class="file-card"
                 >
                     <div class="file-icon">
-                        <File size="32" />
+                        <File :size="32" />
                     </div>
                     <div class="file-info">
                         <h4>{{ file.name }}</h4>
@@ -285,14 +285,14 @@ export default defineComponent({
                             @click="downloadFile(file)"
                             title="Download"
                         >
-                            <Download size="20" />
+                            <Download :size="20" />
                         </button>
                         <button 
                             class="action-button delete-button"
                             @click="deleteFile(file.id)"
                             title="Delete"
                         >
-                            <X size="20" />
+                            <X :size="20" />
                         </button>
                     </div>
                 </div>

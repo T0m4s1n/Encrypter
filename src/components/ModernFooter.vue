@@ -1,12 +1,56 @@
+<script>
+  import {
+    Option as OptionIcon,
+    Twitter as TwitterIcon,
+    Github as GithubIcon,
+    Linkedin as LinkedinIcon,
+    Instagram as InstagramIcon,
+    Link as LinkIcon,
+    Home as HomeIcon,
+    User as UserIcon,
+    Settings as ServicesIcon,
+    Contact as ContactIcon,
+    Layout as LayoutIcon,
+    Code as CodeIcon,
+    Palette as PaletteIcon,
+    Smartphone as SmartphoneIcon,
+    Database as DatabaseIcon,
+    Mail as MailIcon,
+    MapPin as MapPinIcon,
+    Phone as PhoneIcon,
+  } from 'lucide-vue-next'
+  
+  export default {
+    name: 'ModernFooter',
+    components: {
+      OptionIcon,
+      TwitterIcon,
+      GithubIcon,
+      LinkedinIcon,
+      InstagramIcon,
+      LinkIcon,
+      HomeIcon,
+      UserIcon,
+      ServicesIcon,
+      ContactIcon,
+      LayoutIcon,
+      CodeIcon,
+      PaletteIcon,
+      SmartphoneIcon,
+      DatabaseIcon,
+      MailIcon,
+      MapPinIcon,
+      PhoneIcon,
+    }
+  }
+  </script>
 <template>
     <footer class="footer-container">
       <div class="footer-content">
-        <!-- Main Footer Section -->
         <div class="footer-grid">
-          <!-- Company Info Section -->
           <div class="footer-section">
             <h3 class="footer-title">
-              <RocketIcon class="icon" />
+              <OptionIcon class="icon" />
               Vault Encrypter
             </h3>
             <p class="footer-description">
@@ -84,54 +128,7 @@
         </div>
       </div>
     </footer>
-  </template>
-  
-  <script>
-  import {
-    Rocket as RocketIcon,
-    Twitter as TwitterIcon,
-    Github as GithubIcon,
-    Linkedin as LinkedinIcon,
-    Instagram as InstagramIcon,
-    Link as LinkIcon,
-    Home as HomeIcon,
-    User as UserIcon,
-    Settings as ServicesIcon,
-    Contact as ContactIcon,
-    Layout as LayoutIcon,
-    Code as CodeIcon,
-    Palette as PaletteIcon,
-    Smartphone as SmartphoneIcon,
-    Database as DatabaseIcon,
-    Mail as MailIcon,
-    MapPin as MapPinIcon,
-    Phone as PhoneIcon,
-  } from 'lucide-vue-next'
-  
-  export default {
-    name: 'ModernFooter',
-    components: {
-      RocketIcon,
-      TwitterIcon,
-      GithubIcon,
-      LinkedinIcon,
-      InstagramIcon,
-      LinkIcon,
-      HomeIcon,
-      UserIcon,
-      ServicesIcon,
-      ContactIcon,
-      LayoutIcon,
-      CodeIcon,
-      PaletteIcon,
-      SmartphoneIcon,
-      DatabaseIcon,
-      MailIcon,
-      MapPinIcon,
-      PhoneIcon,
-    }
-  }
-  </script>
+  </template> 
 <style scoped>
   .footer-container {
     background: linear-gradient(to bottom, #1a1a1a, #0a0a0a);

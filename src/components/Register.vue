@@ -122,19 +122,19 @@ export default defineComponent({
                 <h3>Beneficts for the users</h3>
                 <ul>
                     <div class="benefit">
-                        <User size="24" />
+                        <User :size="24" />
                         <span>Custom Profile</span>
                     </div>
                     <div class="benefit">
-                        <Briefcase size="24" />
+                        <Briefcase :size="24" />
                         <span>Access to the vault encrypter Tool</span>
                     </div>
                     <div class="benefit">
-                        <Shield size="24" />
+                        <Shield :size="24" />
                         <span>Security in the data</span>
                     </div>
                     <div class="benefit">
-                        <AlertCircle size="24" />
+                        <AlertCircle :size="24" />
                         <span>Tecnical Support 24/7</span>
                     </div>
                 </ul>
@@ -150,14 +150,14 @@ export default defineComponent({
                 </div>
 
                 <div v-if="errorMessage" class="error-message">
-                    <AlertCircle size="18" />
+                    <AlertCircle :size="18" />
                     <span>{{ errorMessage }}</span>
                 </div>
 
                 <div class="input-group">
                     <label for="input__name">Name</label>
                     <div class="input-wrapper">
-                        <User class="input-icon" size="18" />
+                        <User class="input-icon" :size="18" />
                         <input 
                             id="input__name"
                             v-model="name"
@@ -173,7 +173,7 @@ export default defineComponent({
                 <div class="input-group">
                     <label for="input__profession">Profession</label>
                     <div class="input-wrapper">
-                        <Briefcase class="input-icon" size="18" />
+                        <Briefcase class="input-icon" :size="18" />
                         <input 
                             id="input__profession"
                             v-model="profession"
@@ -189,7 +189,7 @@ export default defineComponent({
                 <div class="input-group">
                     <label for="input__email">Email</label>
                     <div class="input-wrapper">
-                        <Mail class="input-icon" size="18" />
+                        <Mail class="input-icon" :size="18" />
                         <input 
                             id="input__email"
                             v-model="email"
@@ -204,7 +204,7 @@ export default defineComponent({
                 <div class="input-group">
                     <label for="input__password">Password</label>
                     <div class="input-wrapper">
-                        <Lock class="input-icon" size="18" />
+                        <Lock class="input-icon" :size="18" />
                         <input 
                             id="input__password"
                             v-model="password"
@@ -221,8 +221,8 @@ export default defineComponent({
                             @click="togglePassword"
                             :aria-label="showPassword ? 'Hide password' : 'Show password'"
                         >
-                            <Eye v-if="!showPassword" size="18" />
-                            <EyeOff v-else size="18" />
+                            <Eye v-if="!showPassword" :size="18" />
+                            <EyeOff v-else :size="18" />
                         </button>
                     </div>
                 </div>
@@ -230,7 +230,7 @@ export default defineComponent({
                 <div class="input-group">
                     <label for="input__confirm_password">Confirm Password</label>
                     <div class="input-wrapper">
-                        <Lock class="input-icon" size="18" />
+                        <Lock class="input-icon" :size="18" />
                         <input 
                             id="input__confirm_password"
                             v-model="confirmPassword"
@@ -245,8 +245,8 @@ export default defineComponent({
                             @click="toggleConfirmPassword"
                             :aria-label="showConfirmPassword ? 'Hide password' : 'Show password'"
                         >
-                            <Eye v-if="!showConfirmPassword" size="18" />
-                            <EyeOff v-else size="18" />
+                            <Eye v-if="!showConfirmPassword" :size="18" />
+                            <EyeOff v-else :size="18" />
                         </button>
                     </div>
                 </div>
@@ -257,7 +257,7 @@ export default defineComponent({
                             type="checkbox"
                             v-model="twoFactorEnabled"
                         >
-                        <Shield size="18" />
+                        <Shield :size="18" />
                         <span>Enable the Two Factor Code</span>
                     </label>
                 </div>
@@ -265,7 +265,7 @@ export default defineComponent({
                 <footer class="register-footer">
                     <button type="submit" class="register-button" :disabled="isLoading">
                         <span class="button-content" :class="{ 'loading': isLoading }">
-                            <UserPlus size="18" />
+                            <UserPlus :size="18" />
                             <span>{{ isLoading ? 'Singing Up...' : 'Sing Up' }}</span>
                         </span>
                     </button>

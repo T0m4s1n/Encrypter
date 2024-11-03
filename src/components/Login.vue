@@ -38,10 +38,7 @@ export default defineComponent({
                 const user = users.find((u: any) => u.email === email.value);
 
                 if (user && user.password === password.value) {
-                    // Generar un token único de sesión
                     const sessionToken = generateSessionToken(user.email);
-                    
-                    // Almacenar el token en la sesión del usuario
                     localStorage.setItem('session', JSON.stringify({
                         ...user,
                         token: sessionToken
@@ -101,7 +98,7 @@ export default defineComponent({
                 <div class="input-group">
                     <label for="input__email">Email</label>
                     <div class="input-wrapper">
-                        <Mail class="input-icon" size="18" />
+                        <Mail class="input-icon" :size="18" />
                         <input 
                             id="input__email"
                             v-model="email"
@@ -113,9 +110,9 @@ export default defineComponent({
                 </div>
 
                 <div class="input-group">
-                    <label for="input__password">Contraseña</label>
+                    <label for="input__password">Password</label>
                     <div class="input-wrapper">
-                        <Lock class="input-icon" size="18" />
+                        <Lock class="input-icon" :size="18" />
                         <input 
                             id="input__password"
                             v-model="password"
@@ -128,8 +125,8 @@ export default defineComponent({
                             class="toggle-password"
                             @click="togglePassword"
                         >
-                            <Eye v-if="!showPassword" size="18" />
-                            <EyeOff v-else size="18" />
+                            <Eye v-if="!showPassword" :size="18" />
+                            <EyeOff v-else :size="18" />
                         </button>
                     </div>
                 </div>
@@ -137,7 +134,7 @@ export default defineComponent({
                 <footer class="login-footer">
                     <button type="submit" class="login-button" :disabled="isLoading">
                         <span class="button-content" :class="{ 'loading': isLoading }">
-                            <LogIn size="18" />
+                            <LogIn :size="18" />
                             <span>{{ isLoading ? 'Loggin...' : 'Log in' }}</span>
                         </span>
                     </button>
@@ -145,7 +142,7 @@ export default defineComponent({
                     <div class="register-link">
                         <p>Don't have a account? you can Sing Up</p>
                         <button type="button" class="register-button" @click="goToRegister">
-                            <UserPlus size="18" />
+                            <UserPlus :size="18" />
                             <span>Sign Up</span>
                         </button>
                     </div>

@@ -67,7 +67,11 @@ export default defineComponent({
             unmounted(el: HTMLElement) {
                 if (el._clickOutside) {
                     if (el._clickOutside) {
-                        document.removeEventListener('click', el._clickOutside);
+                        if (el._clickOutside) {
+                            if (el._clickOutside) {
+                                document.removeEventListener('click', el._clickOutside);
+                            }
+                        }
                     }
                 }
             }
@@ -108,9 +112,6 @@ export default defineComponent({
                 };
                 document.addEventListener('click', el._clickOutside);
             },
-            unmounted(el: HTMLElement) {
-                document.removeEventListener('click', el._clickOutside);
-            }
         }
     }
 });
@@ -118,31 +119,31 @@ export default defineComponent({
 <template>
     <header class="header">
         <div class="logo">
-            <Option size="64" color="white" />
+            <Option :size="64" color="white" />
         </div>
         <button class="menu-btn" @click="toggleMenu">
             <div class="icon-wrapper">
                 <Menu 
                     class="menu-icon" 
                     :class="{ 'icon-hidden': isMenuOpen }" 
-                    size="24" 
+                    :size="24" 
                     color="white" 
                 />
                 <X 
                     class="close-icon" 
                     :class="{ 'icon-visible': isMenuOpen }" 
-                    size="24" 
+                    :size="24" 
                     color="white" 
                 />
             </div>
         </button>
         <nav class="nav" :class="{ 'nav-open': isMenuOpen }">
             <router-link to="/" @click="isMenuOpen = false">
-                <House size="24" color="white" />
+                <House :size="24" color="white" />
                 <span>Home</span>
             </router-link>
             <router-link to="/contact" @click="isMenuOpen = false">
-                <UserRound size="24" color="white" />
+                <UserRound :size="24" color="white" />
                 <span>Contact</span>
             </router-link>
             
@@ -152,16 +153,16 @@ export default defineComponent({
             <div v-else class="profile-menu-container" v-click-outside="closeProfileMenu">
                 <button class="profile-btn" @click="toggleProfileMenu">
                     <span class="textButton">{{ userName }}</span>
-                    <ChevronDown :class="{ 'rotate-180': isProfileMenuOpen }" size="20" color="white" />
+                    <ChevronDown :class="{ 'rotate-180': isProfileMenuOpen }" :size="20" color="white" />
                 </button>
 
                 <div v-if="!isMobile" class="submenu" :class="{ 'submenu-open': isProfileMenuOpen }">
                     <router-link to="/dashboard" class="submenu-item" @click="closeProfileMenu">
-                        <LayoutDashboard size="20" />
+                        <LayoutDashboard :size="20" />
                         <span>Dashboard</span>
                     </router-link>
                     <button class="submenu-item logout" @click="handleLogout">
-                        <LogOut size="20" />
+                        <LogOut :size="20" />
                         <span>Log Out</span>
                     </button>
                 </div>
@@ -169,22 +170,22 @@ export default defineComponent({
 
             <div v-if="!isMobile" class="submenu" :class="{ 'submenu-open': isProfileMenuOpen }">
                 <router-link to="/dashboard" class="submenu-item login-btn" data-effect="shine" @click="closeProfileMenu">
-                    <LayoutDashboard size="20" color="white" />
+                    <LayoutDashboard :size="20" color="white" />
                     <span class="textButton">Dashboard</span>
                 </router-link>
                 <button class="submenu-item login-btn logout" data-effect="shine" @click="handleLogout">
-                    <LogOut size="20" color="white" />
+                    <LogOut :size="20" color="white" />
                     <span class="textButton">Log Out</span>
                 </button>
             </div>
 
             <template v-if="isMobile && userName">
                 <router-link to="/dashboard" class="mobile-menu-item login-btn" data-effect="shine" @click="isMenuOpen = false">
-                    <LayoutDashboard size="24" color="white" />
+                    <LayoutDashboard :size="24" color="white" />
                     <span class="textButton">Dashboard</span>
                 </router-link>
                 <button class="mobile-menu-item login-btn logout" data-effect="shine" @click="handleLogout">
-                    <LogOut size="24" color="white" />
+                    <LogOut :size="24" color="white" />
                     <span class="textButton">Log Out</span>
                 </button>
             </template>
