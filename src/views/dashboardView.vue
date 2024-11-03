@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineOptions } from 'vue'
-import Dashboard from '@/components/Dashboard.vue';
+import Dashboard from '../components/Dashboard.vue';
 
 defineOptions({
   name: 'DashboardView',
