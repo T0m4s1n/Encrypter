@@ -370,4 +370,11 @@ export default defineComponent({
         padding: 0.6rem 1rem 0.6rem 2.5rem;
     }
 }
+
+.error-message{
+    color: red;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
 </style>
