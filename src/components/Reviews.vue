@@ -25,7 +25,7 @@ export default {
           date: 'Nov 21, 2024'
         },
         {
-          name: 'David Chen',
+          name: 'Danilo Andres',
           company: 'StartUp Labs',
           rating: 4,
           text: 'Great experience working with this team. They brought our vision to life with their technical expertise and creative solutions. Looking forward to future collaborations.',
