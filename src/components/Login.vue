@@ -43,7 +43,7 @@ export default defineComponent({
                         token: sessionToken
                     }));
 
-                    router.push('/dashboard').then(() => {
+                    router.push('/').then(() => {
                         window.location.reload();
                     });
                 } else {
