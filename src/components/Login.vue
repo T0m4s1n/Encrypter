@@ -24,7 +24,6 @@ export default defineComponent({
             showPassword.value = !showPassword.value;
         };
 
-        // Genera un token único de sesión usando el email y la marca de tiempo
         const generateSessionToken = (email: string): string => {
             const timestamp = Date.now();
             return btoa(`${email}_${timestamp}`);
@@ -65,7 +64,7 @@ export default defineComponent({
         onMounted(() => {
             const session = JSON.parse(localStorage.getItem('session') || 'null');
             if (session) {
-                router.push('/dashboard');
+                router.push('/');
             }
         });
 
