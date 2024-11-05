@@ -5,7 +5,7 @@ export default {
     return {
       config: {
         particleCount: 5000,
-        textArray: ['Encrypt.', 'Vault.', 'Secure.', 'Protect.', 'Safe.', 'Private.', 'Confidential.', 'Shield.', 'Lock.', 'Guard.'],
+        textArray: ['Encrypt.', 'Vault.', 'Secure.', 'Protect.', 'Safe.', 'Private.', 'T0m4s1n', 'Shield.', 'Lock.', 'Guard.'],
         mouseRadius: 0.1,
         particleSize: 2,
         forceMultiplier: 0.001,
