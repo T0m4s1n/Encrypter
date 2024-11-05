@@ -3,6 +3,7 @@ import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { Shield, Upload, Download, File, AlertTriangle, X, Loader, Plus } from 'lucide-vue-next';
 
+
 interface UploadedFile {
     id: string;
     name: string;
@@ -26,7 +27,7 @@ interface EncryptionBox {
     id: string;
     title: string;
     description: string;
-    type: 'base64' | 'fernel';
+    type: 'base64' | 'fernel' | 'T0m4s1n';
     icon: any;
 }
 
@@ -65,6 +66,13 @@ export default defineComponent({
                 title: 'Fernel Cipher',
                 description: 'Advanced encryption for enhanced security',
                 type: 'fernel',
+                icon: Shield
+            },
+            {
+                id: 'T0m4s1nMethod',
+                title: 'T0m4s1n Method',
+                description: 'encryption method selfmade for enhanced security',
+                type: 'T0m4s1n',
                 icon: Shield
             }
         ];
@@ -148,6 +156,61 @@ export default defineComponent({
                 reader.onerror = reject;
                 reader.readAsBinaryString(file);
             });
+        };
+
+        const encryptT0m4s1n = async (file: File): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = async () => {
+                try {
+                    const binaryData = reader.result as string;
+                    const encryptedData = await encryptLayers(binaryData);
+                    resolve(encryptedData);
+                } catch (error) {
+                    reject(error);
+                }
+                };
+                reader.onerror = reject;
+                reader.readAsBinaryString(file);
+            });
+        };
+
+        const encryptLayers = async (data: string): Promise<string> => {
+        let encryptedData = data;
+        encryptedData = encryptedData.split('').reverse().join('');
+        const keyArray = new Uint8Array(16);
+        crypto.getRandomValues(keyArray);
+        const key = Array.from(keyArray).map(byte => byte.toString(16).padStart(2, '0')).join('');
+        encryptedData = xorWithKey(encryptedData, key);
+        encryptedData = rotateCharacters(encryptedData, 5);
+        encryptedData = btoa(encryptedData);
+        encryptedData = atob(encryptedData);
+        encryptedData = rotateCharacters(encryptedData, -5);
+        encryptedData = xorWithKey(encryptedData, key);
+        encryptedData = encryptedData.split('').reverse().join('');
+
+        return encryptedData;
+        };
+
+        const xorWithKey = (data: string, key: string): string => {
+        let result = '';
+        for (let i = 0; i < data.length; i++) {
+            result += String.fromCharCode(data.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+        }
+        return result;
+        };
+
+        const rotateCharacters = (data: string, shift: number): string => {
+        return data.split('').map(char => {
+            const charCode = char.charCodeAt(0);
+            if (charCode >= 65 && charCode <= 90) {
+            return String.fromCharCode(((charCode - 65 + shift) % 26) + 65);
+            } else if (charCode >= 97 && charCode <= 122) {
+            return String.fromCharCode(((charCode - 97 + shift) % 26) + 97);
+            } else {
+            return char;
+            }
+        }).join('');
         };
 
         const encryptFernel = async (file: File): Promise<string> => {
