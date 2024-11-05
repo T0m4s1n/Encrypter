@@ -211,7 +211,7 @@ export default {
 }
 
 .last-message {
-  border: 2px solid #2196F3;
+  border: 2px solid #fff;
 }
 
 .message-header {
