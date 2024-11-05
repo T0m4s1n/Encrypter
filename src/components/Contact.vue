@@ -89,14 +89,17 @@ export default {
       this.isSubmitting = true
       
       try {
-        await new Promise(resolve => setTimeout(resolve, 1500))
-        
-        this.showSuccessModal = true
-        this.resetForm()
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      window.dispatchEvent(new CustomEvent('newContactMessage', {
+        detail: { ...this.formData }
+      }))
+      this.showSuccessModal = true
+      this.resetForm()
       } catch (error) {
-        console.error('Error sending message:', error)
+      console.error('Error sending message:', error)
       } finally {
-        this.isSubmitting = false
+      this.isSubmitting = false
       }
     },
     
@@ -444,9 +447,42 @@ input.error, textarea.error {
   padding: 1rem;
 }
 
+@keyframes slideInRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 .modal-content {
+  color: #f2f2f2;
   padding: clamp(1.5rem, 4vw, 2rem);
   width: min(90%, 400px);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  text-align: center;
+  animation: slideInRight 0.6s ease-out;
+}
+
+.close-button {
+  display: block;
+  margin: 1rem auto;
+  padding: 0.5rem 1rem;
+  background: #ff4444;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.close-button:hover {
+  background: #cc0000;
+  transform: scale(1.05);
 }
 
 .success-icon {

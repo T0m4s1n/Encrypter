@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { Shield, Upload, Download, File, AlertTriangle, X } from 'lucide-vue-next';
+import { Shield, Upload, Download, File, AlertTriangle, X, Loader, Plus } from 'lucide-vue-next';
 
 interface UploadedFile {
     id: string;
@@ -11,6 +11,15 @@ interface UploadedFile {
     dateUploaded: string;
     downloadUrl?: string;
     userId: string;
+}
+
+interface QueuedFile {
+    id: string;
+    file: File;
+    encryptionType: string;
+    status: 'queued' | 'processing' | 'completed' | 'error';
+    progress: number;
+    error?: string;
 }
 
 interface EncryptionBox {
@@ -29,16 +38,19 @@ export default defineComponent({
         Download,
         File,
         AlertTriangle,
-        X
+        X,
+        Loader,
+        Plus
     },
     setup() {
         const router = useRouter();
         const uploadedFiles = ref<UploadedFile[]>([]);
-        const selectedFile = ref<File | null>(null);
+        const uploadQueue = ref<QueuedFile[]>([]);
         const selectedEncryption = ref<string>('');
-        const isUploading = ref(false);
+        const isProcessing = ref(false);
         const errorMessage = ref<string>('');
         const currentUserId = ref<string>('');
+        const fileInput = ref<HTMLInputElement | null>(null);
 
         const encryptionBoxes: EncryptionBox[] = [
             {
@@ -60,9 +72,8 @@ export default defineComponent({
         const loadUserFiles = (userId: string) => {
             const storedFiles = localStorage.getItem(`userFiles_${userId}`);
             if (storedFiles) {
-                const allFiles = JSON.parse(storedFiles);
-                // Filter files to only show those belonging to the current user
-                uploadedFiles.value = allFiles.filter((file: UploadedFile) => file.userId === userId);
+                uploadedFiles.value = JSON.parse(storedFiles)
+                    .filter((file: UploadedFile) => file.userId === userId);
                 uploadedFiles.value.forEach(file => {
                     if (file.downloadUrl) {
                         const encryptedContent = localStorage.getItem(`fileContent_${file.id}`);
@@ -82,13 +93,8 @@ export default defineComponent({
         };
 
         const deleteFile = (fileId: string) => {
-            // Remove file content from localStorage
             localStorage.removeItem(`fileContent_${fileId}`);
-            
-            // Remove file from uploadedFiles array
             uploadedFiles.value = uploadedFiles.value.filter(file => file.id !== fileId);
-            
-            // Save updated files list
             saveUserFiles(currentUserId.value);
         };
 
@@ -108,10 +114,27 @@ export default defineComponent({
             }
         };
 
-        const handleFileSelect = (event: Event) => {
+        const addFilesToQueue = (event: Event) => {
             const target = event.target as HTMLInputElement;
-            if (target.files && target.files.length > 0) {
-                selectedFile.value = target.files[0];
+            if (!target.files || !selectedEncryption.value) {
+                errorMessage.value = 'Please select an encryption method first';
+                return;
+            }
+
+            const files = Array.from(target.files);
+            files.forEach(file => {
+                const queuedFile: QueuedFile = {
+                    id: Math.random().toString(36).substring(7),
+                    file,
+                    encryptionType: selectedEncryption.value,
+                    status: 'queued',
+                    progress: 0
+                };
+                uploadQueue.value.push(queuedFile);
+            });
+
+            if (fileInput.value) {
+                fileInput.value.value = '';
             }
         };
 
@@ -132,54 +155,69 @@ export default defineComponent({
             return base64.split('').reverse().join('');
         };
 
-        const handleUpload = async () => {
-            if (!selectedFile.value || !selectedEncryption.value) {
-                errorMessage.value = 'Please select both a file and encryption method';
+        const processQueue = async () => {
+            if (uploadQueue.value.length === 0 || isProcessing.value) {
                 return;
             }
 
-            try {
-                isUploading.value = true;
-                errorMessage.value = '';
+            isProcessing.value = true;
+            errorMessage.value = '';
 
-                let encryptedContent = '';
-                if (selectedEncryption.value === 'base64') {
-                    encryptedContent = await encryptBase64(selectedFile.value);
-                } else if (selectedEncryption.value === 'fernel') {
-                    encryptedContent = await encryptFernel(selectedFile.value);
+            for (const queuedFile of uploadQueue.value) {
+                try {
+                    queuedFile.status = 'processing';
+
+                    let encryptedContent = '';
+                    if (queuedFile.encryptionType === 'base64') {
+                        encryptedContent = await encryptBase64(queuedFile.file);
+                    } else if (queuedFile.encryptionType === 'fernel') {
+                        encryptedContent = await encryptFernel(queuedFile.file);
+                    }
+
+                    const fileId = queuedFile.id;
+                    const blob = new Blob([encryptedContent], { type: 'text/plain' });
+                    const downloadUrl = URL.createObjectURL(blob);
+                    localStorage.setItem(`fileContent_${fileId}`, encryptedContent);
+
+                    const newFile: UploadedFile = {
+                        id: fileId,
+                        name: queuedFile.file.name,
+                        size: queuedFile.file.size,
+                        encryptionType: queuedFile.encryptionType,
+                        dateUploaded: new Date().toLocaleString(),
+                        downloadUrl,
+                        userId: currentUserId.value
+                    };
+
+                    uploadedFiles.value.unshift(newFile);
+                    queuedFile.status = 'completed';
+                    queuedFile.progress = 100;
+                    
+                    saveUserFiles(currentUserId.value);
+                    
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                } catch (error) {
+                    queuedFile.status = 'error';
+                    queuedFile.error = 'Error processing file';
+                    console.error(error);
                 }
-
-                const fileId = Math.random().toString(36).substring(7);
-                const blob = new Blob([encryptedContent], { type: 'text/plain' });
-                const downloadUrl = URL.createObjectURL(blob);
-                localStorage.setItem(`fileContent_${fileId}`, encryptedContent);
-
-                const newFile: UploadedFile = {
-                    id: fileId,
-                    name: selectedFile.value.name,
-                    size: selectedFile.value.size,
-                    encryptionType: selectedEncryption.value,
-                    dateUploaded: new Date().toLocaleString(),
-                    downloadUrl,
-                    userId: currentUserId.value
-                };
-
-                uploadedFiles.value.unshift(newFile);
-                saveUserFiles(currentUserId.value);
-
-                selectedFile.value = null;
-                selectedEncryption.value = '';
-
-                const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-                if (fileInput) {
-                    fileInput.value = '';
-                }
-            } catch (error) {
-                errorMessage.value = 'Error processing file. Please try again.';
-                console.error(error);
-            } finally {
-                isUploading.value = false;
             }
+            setTimeout(() => {
+                uploadQueue.value = uploadQueue.value.filter(
+                    file => file.status !== 'completed' && file.status !== 'error'
+                );
+            }, 2000);
+
+            isProcessing.value = false;
+        };
+
+        const clearQueue = () => {
+            uploadQueue.value = [];
+            errorMessage.value = '';
+        };
+
+        const removeFromQueue = (fileId: string) => {
+            uploadQueue.value = uploadQueue.value.filter(file => file.id !== fileId);
         };
 
         const downloadFile = (file: UploadedFile) => {
@@ -205,16 +243,19 @@ export default defineComponent({
 
         return {
             uploadedFiles,
-            selectedFile,
+            uploadQueue,
             selectedEncryption,
-            isUploading,
+            isProcessing,
             errorMessage,
             encryptionBoxes,
-            handleFileSelect,
-            handleUpload,
+            fileInput,
+            addFilesToQueue,
+            processQueue,
+            clearQueue,
             downloadFile,
             formatFileSize,
-            deleteFile
+            deleteFile,
+            removeFromQueue
         };
     }
 });
@@ -223,6 +264,7 @@ export default defineComponent({
 <template>
     <div class="dashboard">
         <h1 class="dashboard-title">Encryption Dashboard</h1>
+        
         <div class="encryption-boxes">
             <div
                 v-for="box in encryptionBoxes"
@@ -236,33 +278,93 @@ export default defineComponent({
                 <p>{{ box.description }}</p>
             </div>
         </div>
+
         <div class="upload-section">
             <div class="file-input-container">
                 <input 
+                    ref="fileInput"
                     type="file"
-                    @change="handleFileSelect"
+                    @change="addFilesToQueue"
                     class="file-input"
+                    multiple
+                    :disabled="!selectedEncryption"
                 >
                 <div class="file-input-overlay">
-                    <Upload :size="24" />
-                    <span>{{ selectedFile ? selectedFile.name : 'Choose a file' }}</span>
+                    <Plus :size="24" />
+                    <span>Add files to queue</span>
                 </div>
             </div>
-
-            <button 
-                class="upload-button"
-                @click="handleUpload"
-                :disabled="!selectedFile || !selectedEncryption || isUploading"
-            >
-                <span class="button-text">
-                    {{ isUploading ? 'Processing...' : 'Encrypt & Upload' }}
-                </span>
-            </button>
         </div>
+
+        <div v-if="uploadQueue.length > 0" class="upload-queue">
+            <div class="queue-header">
+                <h2>Upload Queue ({{ uploadQueue.length }} files)</h2>
+                <div class="queue-actions">
+                    <button 
+                        @click="processQueue" 
+                        class="process-button"
+                        :disabled="isProcessing || uploadQueue.length === 0"
+                    >
+                        <span v-if="isProcessing">Processing...</span>
+                        <span v-else>Start Upload</span>
+                    </button>
+                    <button 
+                        @click="clearQueue"
+                        class="clear-button"
+                        :disabled="isProcessing"
+                    >
+                        Clear Queue
+                    </button>
+                </div>
+            </div>
+            
+            <div class="queue-items">
+                <div 
+                    v-for="file in uploadQueue" 
+                    :key="file.id"
+                    class="queue-item"
+                >
+                    <div class="queue-item-info">
+                        <span class="filename">{{ file.file.name }}</span>
+                        <span class="size">{{ formatFileSize(file.file.size) }}</span>
+                    </div>
+                    <div class="queue-item-status">
+                        <Loader v-if="file.status === 'processing'" class="spin" />
+                        <div 
+                            v-if="file.status === 'queued'"
+                            class="status-badge queued"
+                        >
+                            Queued
+                        </div>
+                        <div 
+                            v-if="file.status === 'completed'"
+                            class="status-badge completed"
+                        >
+                            Completed
+                        </div>
+                        <div 
+                            v-if="file.status === 'error'"
+                            class="status-badge error"
+                        >
+                            Error
+                        </div>
+                        <button 
+                            @click="removeFromQueue(file.id)"
+                            class="remove-button"
+                            v-if="file.status !== 'processing'"
+                        >
+                            <X :size="16" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div v-if="errorMessage" class="error-message">
             <AlertTriangle :size="20" />
             {{ errorMessage }}
         </div>
+
         <div class="files-list" v-if="uploadedFiles.length > 0">
             <h2>Encrypted Files</h2>
             <div class="files-grid">
@@ -377,6 +479,162 @@ export default defineComponent({
 .encryption-box p {
     color: #888888;
     font-size: 0.9rem;
+}
+.upload-queue {
+    margin: 2rem 0;
+    background: #1a1a1a;
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+
+.queue-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.queue-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.process-button {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-family: "Poppins", sans-serif;
+}
+
+.process-button:disabled {
+    background: #1e40af;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.process-button:not(:disabled):hover {
+    background: #333;
+    transform: translateY(-1px);
+}
+
+.clear-button {
+    background: transparent;
+    color: #ef4444;
+    border: 1px solid #ef4444;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-family: "Poppins", sans-serif;
+}
+
+.clear-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.clear-button:hover {
+    background: rgba(239, 68, 68, 0.1);
+    transform: translateY(-1px);
+}
+
+.upload-queue h2 {
+    color: #ffffff;
+    margin-bottom: 1rem;
+}
+
+.queue-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.queue-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+}
+
+.queue-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.filename {
+    color: #ffffff;
+    font-size: 0.9rem;
+}
+
+.size {
+    color: #888888;
+    font-size: 0.8rem;
+}
+
+.queue-item-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.8rem;
+    font-family: "Poppins", sans-serif;
+}
+
+.status-badge.queued {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.status-badge.completed {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+}
+
+.status-badge.error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.remove-button {
+    background: transparent;
+    border: none;
+    color: #888888;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.remove-button:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .upload-section {
