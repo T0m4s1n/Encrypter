@@ -79,7 +79,7 @@
             <ul class="footer-links">
               <li><a href="/"><HomeIcon class="link-icon" /> Home</a></li>
               <li><a href="/contact"><UserIcon class="link-icon" /> Contact</a></li>
-              <li><a href="/dashboard"><ServicesIcon class="link-icon" /> Dashboard</a></li>
+              <li><a href="/login"><ServicesIcon class="link-icon" /> Dashboar</a></li>
             </ul>
           </div>
           <div class="footer-section">
