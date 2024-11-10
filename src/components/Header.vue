@@ -6,7 +6,7 @@ declare global {
         _clickOutside?: (event: Event) => void;
     }
 }
-import { Option, House, UserRound, Menu, X, ChevronDown, LayoutDashboard, LogOut, Lock } from 'lucide-vue-next';
+import { Option, House, UserRound, Menu, X, ChevronDown, LayoutDashboard, LogOut, Lock, LockOpen } from 'lucide-vue-next';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
@@ -20,7 +20,8 @@ export default defineComponent({
         ChevronDown,
         LayoutDashboard,
         LogOut,
-        Lock
+        Lock,
+        LockOpen
     },
     setup() {
         const router = useRouter();
@@ -150,6 +151,10 @@ export default defineComponent({
             <router-link to="/admin" @click="isMenuOpen = false">
                 <Lock :size="24" color="white" />
                 <span>Admin</span>
+            </router-link>
+            <router-link to="/desencrypt" @click="isMenuOpen = false">
+                <LockOpen :size="24" color="white" />
+                <span>Desencrypt</span>
             </router-link>
             <button v-if="!userName" class="login-btn" data-effect="shine" @click="redirectToLogin">
                 <span class="textButton">Log In</span>
