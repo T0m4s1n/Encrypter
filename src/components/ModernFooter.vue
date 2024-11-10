@@ -54,7 +54,7 @@
               Vault Encrypter
             </h3>
             <p class="footer-description">
-              We are a team of developers making this tool for users that want to secure files important to them.
+               I'm T0m4s1n, a developer making this tool for users that want to secure files important to them.
             </p>
             <div class="social-links">
               <a href="#" class="social-icon" aria-label="Twitter">
@@ -79,7 +79,7 @@
             <ul class="footer-links">
               <li><a href="/"><HomeIcon class="link-icon" /> Home</a></li>
               <li><a href="/contact"><UserIcon class="link-icon" /> Contact</a></li>
-              <li><a href="#"><ServicesIcon class="link-icon" /> Services</a></li>
+              <li><a href="/dashboard"><ServicesIcon class="link-icon" /> Dashboard</a></li>
             </ul>
           </div>
           <div class="footer-section">
@@ -91,7 +91,7 @@
               <li><a href="#"><CodeIcon class="link-icon" /> Encrypt</a></li>
               <li><a href="#"><PaletteIcon class="link-icon" /> Desing of files encrypt</a></li>
               <li><a href="#"><SmartphoneIcon class="link-icon" /> Mobile</a></li>
-              <li><a href="#"><DatabaseIcon class="link-icon" /> Cloud Services</a></li>
+              <li><a href="#"><DatabaseIcon class="link-icon" /> Local Storage</a></li>
             </ul>
           </div>
           <div class="footer-section">

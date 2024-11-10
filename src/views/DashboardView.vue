@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { defineOptions } from 'vue'
 import Dashboard from '../components/Dashboard.vue';
+import MessageAlert from '@/components/MessageAlert.vue'
 
 defineOptions({
   name: 'DashboardView',
   components: {
+    MessageAlert,
     Dashboard,
     },
 })
@@ -12,6 +14,7 @@ defineOptions({
 
 <template>
   <main>
+    <MessageAlert/>
     <Dashboard />
   </main>
 </template>
