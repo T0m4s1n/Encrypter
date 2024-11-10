@@ -46,7 +46,7 @@ export default {
         id: Date.now(),
         timestamp: new Date().toISOString()
       };
-      this.messageStack.unshift(newMessage); // Agregar al principio
+      this.messageStack.unshift(newMessage);
       this.saveMessages();
     },
     removeLastMessage() {
@@ -211,7 +211,7 @@ export default {
 }
 
 .last-message {
-  border: 2px solid #fff;
+  border: 2px solid #5a1a1a; 
 }
 
 .message-header {
@@ -261,7 +261,7 @@ export default {
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: #ff4444;
+  background: linear-gradient(45deg, #5a1a1a, #7a2a2a, #5a1a1a);
   border: none;
   border-radius: 6px;
   color: white;
@@ -271,7 +271,7 @@ export default {
 }
 
 .delete-button:hover {
-  background: #ff6666;
+  transform: translateY(-2px);
 }
 
 .empty-state{
