@@ -28,6 +28,7 @@ export default defineComponent({
 
     const closeModal = () => {
       showModal.value = false
+      window.location.href = 'https://www.google.com'
     }
 
     const checkPreviousAcceptance = () => {
