@@ -3,6 +3,16 @@ import { defineComponent, ref } from 'vue';
 import { Mail, Lock, UserPlus, Eye, EyeOff, User, Briefcase, Shield, AlertCircle } from 'lucide-vue-next';
 import router from '../router';
 
+async function hashPassword(password: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    
+    return hashHex;
+}
+
 export default defineComponent({
     name: 'Register',
     components: {
@@ -72,12 +82,13 @@ export default defineComponent({
                     errorMessage.value = 'The email is already registered';
                     return;
                 }
+                const hashedPassword = await hashPassword(password.value);
                 
                 const newUser = {
                     name: name.value,
                     profession: profession.value,
                     email: email.value,
-                    password: password.value,
+                    password: hashedPassword,
                     twoFactorEnabled: twoFactorEnabled.value,
                     createdAt: new Date().toISOString()
                 };
