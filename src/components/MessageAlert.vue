@@ -28,7 +28,7 @@ export default defineComponent({
 
     const closeModal = () => {
       showModal.value = false
-      window.location.href = 'https://www.google.com'
+      window.location.href = 'https://github.com/T0m4s1n/Encrypter'
     }
 
     const checkPreviousAcceptance = () => {
