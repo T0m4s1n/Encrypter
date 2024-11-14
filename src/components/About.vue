@@ -1,3 +1,13 @@
+<script>
+  export default {
+    name: 'AboutSection',
+    data() {
+      return {
+        hover: null
+      }
+    }
+  }
+</script>
 <template>
     <section class="about-container">
       <div class="about-grid">
@@ -46,17 +56,6 @@
       </div>
     </section>
   </template>
-  
-  <script>
-  export default {
-    name: 'AboutSection',
-    data() {
-      return {
-        hover: null
-      }
-    }
-  }
-  </script>
   <style scoped>
   .about-container {
     min-height: 10vh;
