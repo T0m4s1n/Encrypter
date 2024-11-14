@@ -11,21 +11,21 @@ export default {
     return {
       reviews: [
         {
-          name: 'Alex Johnson',
+          name: 'Nicolas Insuasty',
           company: 'Tech Solutions Inc.',
           rating: 5,
           text: 'Absolutely amazing service! The attention to detail and technical expertise demonstrated were outstanding. Would highly recommend for any complex development projects.',
           date: 'Oct 15, 2024'
         },
         {
-          name: 'Sarah Miller',
+          name: 'Tomasin',
           company: 'Digital Innovations',
           rating: 5,
           text: 'The team went above and beyond our expectations. Their innovative approach to problem-solving and commitment to quality made our project a huge success.',
           date: 'Nov 21, 2024'
         },
         {
-          name: 'Danilo Andres',
+          name: 'Tomas Benavides',
           company: 'StartUp Labs',
           rating: 4,
           text: 'Great experience working with this team. They brought our vision to life with their technical expertise and creative solutions. Looking forward to future collaborations.',
