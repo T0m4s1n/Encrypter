@@ -32,7 +32,7 @@ export default {
           date: 'Nov 1, 2024'
         },
         {
-          name: 'Emily Brooks',
+          name: 'Mike Tyson',
           company: 'Creative Minds Co.',
           rating: 5,
           text: 'Exceptional service from start to finish. The teams communication was excellent, and they delivered exactly what we needed, on time and within budget.',
